@@ -120,7 +120,7 @@ export default function parseCourse(raw: RawTechnionCourse): {
           id: optionId,
           instructor,
           isSelected: false,
-          sessionTemplateId: templateId,
+          sessionTemplateId: templateId || "",
           scheduleEntryIds: [],
           weeklyDuration: 0,
         };
@@ -153,6 +153,7 @@ export default function parseCourse(raw: RawTechnionCourse): {
     faculty: raw.general?.["פקולטה"] ?? "נחשבת",
     points: parseFloat(raw.general?.["נקודות"] ?? "0"),
     color: getRandomHexColor(),
+    resources: [],
     sessionTemplatedIds: Array.from(templates.values()).map((t) => t.id),
   };
   const sessionInstances: SessionInstance[] = [];

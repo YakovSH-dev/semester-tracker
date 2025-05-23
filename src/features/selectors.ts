@@ -1,6 +1,5 @@
 import type { RootState } from "../store";
 import { createSelector } from "@reduxjs/toolkit";
-import { useMemo } from "react";
 
 import { sessionInstancesSelectors } from "./courses/sessions/sessionInstancesSlice";
 import { scheduleOptionsSelectors } from "./courses/sessions/scheduleOptionSlice";
