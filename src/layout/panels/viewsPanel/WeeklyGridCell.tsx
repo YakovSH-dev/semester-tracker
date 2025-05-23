@@ -82,23 +82,13 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
     dispatch(updateManySessionInstances(payload));
   };
 
-  let outerClasses = `filter`;
-  if (option.isSelected) {
-    const rawBrightness = 100 - (completionPercent ?? 0) * 100;
-    const brightness = Math.max(75, Math.floor(rawBrightness));
-    outerClasses += `brightness-[${brightness}%]`;
-  } else {
-    outerClasses += "opacity-50 ";
-    outerClasses += "hover:opacity-100 ";
-  }
   return (
     <div
-      className={
-        "max-h-full max-w-full min-w-full  rounded-md flex flex-col items-center group transform overflow-hidden shadow " +
-        outerClasses
-      }
+      className={`max-h-full max-w-full min-w-full rounded-md flex flex-col items-center group transform overflow-hidden shadow transition-opacity duration-200 ${
+        option.isSelected ? "opacity-100" : "opacity-50"
+      } hover:opacity-100`}
       style={{
-        background: `${course.color}`,
+        background: course.color,
       }}
     >
       {option.isSelected && (

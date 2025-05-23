@@ -41,32 +41,37 @@ function WeeklyView({
 
   return (
     <div className="h-full flex flex-col bg-white p-1">
-      <header className="grid grid-cols-3 place-items-center">
-        <h1
-          onClick={() => handleCurrentWeekClick()}
-          className="flex cursor-pointer transition-all gap-1 justify-between font-light hover:bg-blue-200  justify-content px-3 mt-4 bg-blue-300 rounded-t-lg"
-        >
-          <span className="font-bold">שבוע נוכחי - {currentWeekNum}: </span>
-          {`(${format(currentWeek, "dd.MM.yyyy")})`}
-        </h1>
+      <header className="grid grid-cols-3 gap-2 place-items-end overflow-hidden">
         <div
-          className="col-start-2 flex flex-row justify-center justify-content gap-1 mt-2"
+          onClick={() => handleCurrentWeekClick()}
+          className="col-start-1 cursor-pointer max-h-fit justify-self-center flex flex-row justify-center justify-content gap-1"
+        >
+          <div className="p-1 flex font-light rounded-t-lg text-md transition-all bg-blue-300 hover:bg-blue-200">
+            <span className="font-bold">שבוע נוכחי - {currentWeekNum} </span>
+            {`(${format(currentWeek, "dd.MM.yyyy")})`}
+          </div>
+        </div>
+
+        <div
+          className="col-start-2 max-h-fit flex flex-row justify-center justify-content gap-1"
           dir="rtl"
         >
           {selectedWeekNum > 1 && (
             <button
-              className="p-1 flex rounded-t-lg text-md transition-all bg-blue-300 hover:bg-blue-200"
+              className="p-1 cursor-pointer flex rounded-t-lg text-md transition-all bg-blue-300 hover:bg-blue-200"
               onClick={() => handlePreviousWeekClick()}
             >
               שבוע קודם
             </button>
           )}
+
           <div className="p-1 font-bold">
             שבוע {selectedWeekNum} : {format(selectedWeek, "dd.MM.yyyy")}
           </div>
+
           {selectedWeekNum < 13 && (
             <button
-              className="p-1 flex rounded-t-lg text-md transition-all bg-blue-300 hover:bg-blue-200"
+              className="p-1 cursor-pointer flex rounded-t-lg text-md transition-all bg-blue-300 hover:bg-blue-200"
               onClick={() => handleNextWeekClick()}
             >
               שבוע הבא

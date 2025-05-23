@@ -146,7 +146,7 @@ function WeeklyGrid({ week }: { week: Date }) {
   return (
     <div className="h-full w-full bg-blue-300 p-1 rounded-lg">
       <div
-        className="h-full w-full overflow-y-auto hide-scrollbar  rounded-b-lg "
+        className="h-full w-full overflow-y-auto hide-scrollbar rounded-b-lg "
         style={gridStyle}
         dir="rtl"
         ref={containerRef}
