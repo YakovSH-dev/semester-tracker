@@ -41,40 +41,68 @@ function WeeklyView({
 
   return (
     <div className="h-full flex flex-col bg-white p-1">
-      <header className="grid grid-cols-3 gap-2 place-items-end overflow-hidden">
+      <header className="grid grid-cols-[1fr_1fr_1fr] gap-2 place-items-end overflow-hidden max-h-15">
         <div
           onClick={() => handleCurrentWeekClick()}
-          className="col-start-1 cursor-pointer max-h-fit justify-self-center flex flex-row justify-center justify-content gap-1"
+          className="col-start-1 cursor-pointer max-h-12  max-w-[70%] whitespace-nowrap mr-3 text-white text-ellipsis justify-self-center overflow-hidden"
         >
-          <div className="p-1 flex font-light rounded-t-lg text-md transition-all bg-blue-300 hover:bg-blue-200">
-            <span className="font-bold">שבוע נוכחי - {currentWeekNum} </span>
-            {`(${format(currentWeek, "dd.MM.yyyy")})`}
+          <div className="font-light mt-0.5 rounded-t-lg text-md transition-all px-2 bg-blue-300 hover:bg-blue-200">
+            <span
+              className="font-bold"
+              style={{ fontSize: `clamp(15px, 1vw, 20px)` }}
+            >
+              שבוע נוכחי - {currentWeekNum}{" "}
+            </span>
           </div>
         </div>
 
         <div
-          className="col-start-2 max-h-fit flex flex-row justify-center justify-content gap-1"
+          className="col-start-2 max-w-[100%] max-h-12 flex items-center flex-row font-bold whitespace-nowrap text-white text-center justify-self-center bg-blue-300 gap-1 rounded-t-lg overflow-hidden"
           dir="rtl"
+          style={{ fontSize: `clamp(15px, 1vw, 20px)` }}
         >
           {selectedWeekNum > 1 && (
             <button
-              className="p-1 cursor-pointer flex rounded-t-lg text-md transition-all bg-blue-300 hover:bg-blue-200"
+              className="p-1 m-0.5 text-bold cursor-pointer flex  text-md  text-ellipsis transition-all rounded-full hover:bg-blue-200"
               onClick={() => handlePreviousWeekClick()}
             >
-              שבוע קודם
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </button>
           )}
-
-          <div className="p-1 font-bold">
-            שבוע {selectedWeekNum} : {format(selectedWeek, "dd.MM.yyyy")}
-          </div>
-
+          שבוע {selectedWeekNum} : {format(selectedWeek, "dd.MM.yyyy")}
           {selectedWeekNum < 13 && (
             <button
-              className="p-1 cursor-pointer flex rounded-t-lg text-md transition-all bg-blue-300 hover:bg-blue-200"
+              className="p-1 m-0.5 rotate-180 cursor-pointer text-md transition-all rounded-full hover:bg-blue-200"
               onClick={() => handleNextWeekClick()}
             >
-              שבוע הבא
+              {" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </button>
           )}
         </div>

@@ -47,7 +47,7 @@ function SearchBar({
   };
 
   return (
-    <div ref={containerRef} className="relative w-full" dir="rtl">
+    <div ref={containerRef} className="relative h-full w-full" dir="rtl">
       <input
         type="text"
         value={query}

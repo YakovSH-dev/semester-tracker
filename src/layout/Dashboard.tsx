@@ -12,7 +12,7 @@ function Dashboard() {
   };
   return (
     <div
-      className="h-full w-full grid [grid-template-rows:auto_auto] gap-2 p-2 bg-blue-100 overflow-hidden"
+      className="h-full w-full grid [grid-template-rows:1fr] gap-2 p-2 bg-blue-100 overflow-hidden"
       dir="rtl"
     >
       {/* Top Row */}
@@ -23,7 +23,7 @@ function Dashboard() {
       </div>*/}
 
       {/* Bottom Row */}
-      <div className="min-h-full w-full grid [grid-template-columns:4fr_1fr] gap-2 overflow-hidden">
+      <div className="h-full w-full grid [grid-template-columns:4fr_1fr] gap-2 overflow-hidden">
         <div className="h-full bg-white rounded shadow overflow-hidden">
           <ViewsPanel
             selectedWeek={selectedWeek}

@@ -36,6 +36,7 @@ function Header() {
     dispatch(deleteCourse(courseId));
   };
   const createFullCourse = (courseData: FullCourseData) => {
+    if (courseIds.find((cid) => cid === courseData.course.id)) return;
     dispatch(addCourse(courseData.course));
     dispatch(addManySessionTemplates(courseData.sessionTemplates));
     dispatch(addManySessionInstances(courseData.sessionInstances));
@@ -46,10 +47,10 @@ function Header() {
   return (
     <>
       <header
-        className="w-full bg-blue-200 grid grid-cols-[1fr_1fr_1fr] p-2"
+        className="w-full bg-blue-200 grid grid-cols-[1fr_1fr_1fr] p-2 place-items-center"
         dir="rtl"
       >
-        <div className="flex justify-center items-center">
+        <div className="justify-self-center w-[80%] ">
           <SearchBar onItemSelect={createFullCourse} />
         </div>
 

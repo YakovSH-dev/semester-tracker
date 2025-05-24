@@ -197,7 +197,7 @@ function WeeklyGrid({ week }: { week: Date }) {
             }}
           >
             <div
-              className="absolute max-h-full min-h-full z-1 flex rounded-lg p-0.5 justify-center transition-transform ease-in duration-100 hover:max-h-500 hover:w-100 hover:z-10"
+              className="absolute max-h-full min-h-full z-1 flex rounded-lg p-0.5 justify-center transition-transform duration-500 hover:max-h-500 hover:w-100 hover:z-10 overflow-hidden"
               style={{
                 left: `${
                   (entry.columnIndex ?? 0) * (100 / entry.totalColumns)

@@ -54,11 +54,15 @@ function GapEntryCard({ entryId, week }: { entryId: IdType; week: string }) {
   };
   return (
     <button
-      className="bg-red-300 rounded hover:brightness-95 cursor-pointer"
+      className={`flex flex-col bg-red-500 rounded-xs hover:brightness-95 cursor-pointer pt-2`}
       onClick={handleClickComplete}
     >
-      <h1 className="p-1 text-xs font-bold" dir="rtl">
-        {template.type.concat(` (${entry.durationInHours} ש')`)} - {course.name}
+      <div
+        className={`p-1 rounded w-1/2 self-center`}
+        style={{ background: `${course.color}` }}
+      ></div>
+      <h1 className="p-1 text-[0.6rem] font-bold text-red-950" dir="rtl">
+        {template.type.concat(` (${entry.durationInHours} ש')`)} -{course.name}
       </h1>
     </button>
   );

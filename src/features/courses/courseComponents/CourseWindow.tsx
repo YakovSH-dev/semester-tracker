@@ -123,7 +123,7 @@ function CourseWindow({
             sdfsdf
           </section>
         </div>
-        <div className="grid grid-rows-2 items-center">
+        <div className="grid grid-rows-2 w-full items-center">
           <section className="h-full w-full border-b border-gray-200 p-1 ">
             <header className="text-sm font-light border-b border-gray-200  grid grid-cols-[1fr_1fr]">
               <h1>קישורים</h1>{" "}
@@ -140,7 +140,7 @@ function CourseWindow({
                 </div>
               </div>
             </header>
-            <main className="grid grid-rows-auto grid-cols-auto gap-1 mt-4 h-fit w-full">
+            <main className="grid grid-cols-4 gap-1 mt-4">
               {course.resources &&
                 course.resources?.map((resource, i) => (
                   <div

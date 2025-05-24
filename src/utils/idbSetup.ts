@@ -138,7 +138,6 @@ export async function updateManyItems<K extends StoreName>(
           ItemToUpdate[key] = updateData[id][key];
         }
       }
-    console.log(ItemToUpdate);
     await addItem<K>(store, ItemToUpdate);
   }
 
