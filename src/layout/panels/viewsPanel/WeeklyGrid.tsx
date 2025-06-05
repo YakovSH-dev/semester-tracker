@@ -13,6 +13,7 @@ function WeeklyGrid({ week }: { week: Date }) {
     daysRowHeight: 0,
     timesColWidth: 0,
     frColWidth: 0,
+    yOffset: 0,
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,11 +47,13 @@ function WeeklyGrid({ week }: { week: Date }) {
         const gridWidth = gridRect.width;
         const frColWidth = (gridWidth - timesColWidth) / numberOfFrColumns;
 
+        const yOffset = daysRowHeight;
         setGridDims({
           frRowHeight: frRowHeight,
           daysRowHeight: daysRowHeight,
           frColWidth: frColWidth,
           timesColWidth: timesColWidth,
+          yOffset: yOffset,
         });
       }
     };
@@ -138,15 +141,15 @@ function WeeklyGrid({ week }: { week: Date }) {
     )
   `,
 
-    backgroundPosition: `-${gridDims.timesColWidth}px ${gridDims.daysRowHeight}px`,
-
-    backgroundRepeat: "no-repeat",
+    backgroundPosition: `-${gridDims.timesColWidth}px ${gridDims.yOffset}px`,
+    backgroundSize: `100% 100%`,
+    backgroundRepeat: " no-repeat",
   };
 
   return (
-    <div className="h-full w-full bg-blue-300 p-1 rounded-lg">
+    <div className="h-full w-full overflow-y-auto hide-scrollbar bg-blue-300 p-1 rounded-lg">
       <div
-        className="h-full w-full overflow-y-auto hide-scrollbar rounded-b-lg "
+        className="h-full w-full  rounded-b-lg "
         style={gridStyle}
         dir="rtl"
         ref={containerRef}

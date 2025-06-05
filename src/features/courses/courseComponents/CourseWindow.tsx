@@ -7,6 +7,8 @@ import { getRandomHexColor } from "../../../utils/misc";
 
 import AddResourceForm from "../../../layout/AddResourceForm";
 
+import ReasourceList from "../../../layout/ReasourceList";
+
 function CourseWindow({
   courseId,
   onClose,
@@ -127,43 +129,26 @@ function CourseWindow({
           <section className="h-full w-full border-b border-gray-200 p-1 ">
             <header className="text-sm font-light border-b border-gray-200  grid grid-cols-[1fr_1fr]">
               <h1>קישורים</h1>{" "}
-              <div className="relative group flex-row" dir="ltr">
+              <div className="relative flex-row" dir="ltr">
                 <button
-                  className="rounded-full h-5 w-5 border "
+                  className="rounded-full h-5 w-5 border cursor-pointer"
                   onClick={() =>
                     setisAddResourceFormOpen(!isAddResourceFormOpen)
                   }
                 ></button>
 
-                <div className="absolute max-h-0  group-hover:max-h-100 rounded-lg overflow-hidden  shadow">
-                  <AddResourceForm onSubmit={handleAddResource} />
+                <div className="absolute  z-20  rounded-lg overflow-hidden  shadow">
+                  {isAddResourceFormOpen && (
+                    <AddResourceForm onSubmit={handleAddResource} />
+                  )}
                 </div>
               </div>
             </header>
             <main className="grid grid-cols-4 gap-1 mt-4">
-              {course.resources &&
-                course.resources?.map((resource, i) => (
-                  <div
-                    key={i}
-                    onClick={() =>
-                      window.open(resource.url, "_blank", "noopener,noreferrer")
-                    }
-                    className="relative shadow flex items-center justify-center group hover:bg-gray-300 bg-gray-100 h-10 w-10 rounded overflow-hidden cursor-pointer"
-                  >
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation(); // prevent opening the link
-                        handleDeleteResource(resource);
-                      }}
-                      className="invisible group-hover:visible hover:text-red-500 absolute font-bold top-0 text-xs left-1 cursor-pointer"
-                    >
-                      x
-                    </button>
-                    <p className="text-center text-[10px] px-1 truncate">
-                      {resource.title}
-                    </p>
-                  </div>
-                ))}
+              <ReasourceList
+                resources={course.resources}
+                handleDeleteResource={handleDeleteResource}
+              />
             </main>
           </section>
           <section className="h-full w-full ">sdfsdfs</section>

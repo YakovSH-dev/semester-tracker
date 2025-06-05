@@ -63,6 +63,7 @@ function generateInstances(
         hourIndex: i,
         weekStartDate: format(curDate, "yyyy-MM-dd"),
         isCompleted: false,
+        resources: [],
         sessionTemplateId: templateId,
       });
     }

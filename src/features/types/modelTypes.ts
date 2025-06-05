@@ -33,7 +33,7 @@ type SessionInstance = {
   hourIndex: number;
   weekStartDate: string; // yyyy-mm-dd
   isCompleted: boolean;
-
+  resources: Link[];
   sessionTemplateId: string | null;
 };
 

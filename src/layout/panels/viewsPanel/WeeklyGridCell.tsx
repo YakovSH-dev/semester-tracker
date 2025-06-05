@@ -16,7 +16,16 @@ import { getWeeklyInstancesForEntry } from "../../../features/selectors";
 import { updateManySessionInstances } from "../../../features/courses/sessions/sessionInstancesSlice";
 import { format } from "date-fns";
 
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
+import type { SessionInstance } from "../../../features/types/modelTypes";
+
+import SessionInstanceModal from "../../../features/courses/sessions/sessionInstanceComponents/SessionInstanceModal";
+
 function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
+  const [isSessionInstanceWindowOpen, setIsSessionInstanceWindowOpen] =
+    useState<[boolean, SessionInstance[]]>([false, []]);
   const dispatch = useDispatch();
 
   // Data
@@ -47,7 +56,7 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
   }
 
   // Handlers
-  const handleClick = () => {
+  const handleSetSelected = () => {
     const newStatus = !option.isSelected;
     dispatch(
       updateScheduleOption({
@@ -81,10 +90,13 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
     }
     dispatch(updateManySessionInstances(payload));
   };
+  const handleOpenSessionWindow = () => {
+    instances && setIsSessionInstanceWindowOpen([true, instances]);
+  };
 
   return (
     <div
-      className={`relative max-h-full max-w-full min-w-full rounded-md flex flex-col items-center group transform shadow transition-opacity duration-200 ${
+      className={`relative overflow-hidden max-h-full max-w-full min-w-full rounded-md flex flex-col items-center group transform shadow transition-opacity duration-200 ${
         option.isSelected ? "opacity-100" : "opacity-50"
       } hover:opacity-100`}
     >
@@ -120,18 +132,31 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
         </div>
       )}
       {option.isSelected && (
-        <button
-          className="h-0  group-hover:h-4 group-hover:visible bg-green-400  transition-all cursor-pointer z-1 w-[50%] rounded-b-md "
-          onClick={handleClickComplete}
-        ></button>
+        <div className="flex flex-row w-full h-fit gap-1 overflow-hidden">
+          <button
+            className="h-0  group-hover:h-4 mx-2 group-hover:visible bg-green-400  transition-all cursor-pointer z-1 w-[50%] rounded-b-md "
+            onClick={handleClickComplete}
+          >
+            {" "}
+            <CheckIcon className="h-full w-full  text-gray-700" />
+          </button>
+          <button
+            className="h-0  group-hover:h-4 mx-2 group-hover:visible bg-green-400  transition-all cursor-pointer z-1 w-[50%] rounded-b-md "
+            onClick={handleSetSelected}
+          >
+            <ArrowPathIcon className="h-full w-full text-gray-700" />
+          </button>
+        </div>
       )}
-      <button
-        className={`flex-1 flex flex-col  p-1 text-[0.6rem] font-bold w-full mt-3 min-h-0 overflow-hidden ${
+      <div
+        className={`flex-1 flex flex-col text-center p-1 cursor-pointer text-[0.6rem] font-bold w-full mt-3 min-h-0 overflow-hidden ${
           completionPercent && completionPercent === 1
             ? "line-through text-gray-300"
             : "text-white"
         }`}
-        onClick={handleClick}
+        onClick={
+          !option.isSelected ? handleSetSelected : handleOpenSessionWindow
+        }
       >
         {course.name}
         <br />
@@ -147,7 +172,22 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
           completionPercent > 0 &&
           completionPercent < 1 &&
           `ראית ${completionPercent * 100}% מהרצאה זו`}
-      </button>
+      </div>
+      {isSessionInstanceWindowOpen[0] && instances && (
+        <>
+          <div
+            className="fixed inset-0 bg-black opacity-50 z-50"
+            onClick={() => setIsSessionInstanceWindowOpen([false, []])}
+          ></div>
+
+          <div className="fixed inset-0 z-50 flex justify-center items-center">
+            <SessionInstanceModal
+              sessionInstances={instances}
+              onClose={() => setIsSessionInstanceWindowOpen([false, []])}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
