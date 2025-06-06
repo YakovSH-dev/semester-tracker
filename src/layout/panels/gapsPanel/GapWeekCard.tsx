@@ -13,9 +13,9 @@ function GapWeekCard({
   return (
     <div className="flex w-full flex-col bg-dark-secondary mt-1 max-h-1/3 rounded-lg">
 
-      <header className="text-center text-sm font-bold p-1 text-dark-primary ">
+      <header className="text-center text-sm font-bold p-1 text-dark-primary">
         <button
-          className="cursor-pointer p-1 px-3 bg-danger rounded-2xl"
+          className="cursor-pointer p-1 text-sm px-3 bg-danger rounded-2xl h-fit w-fit"
           onClick={() =>
             changeSelectedWeek(parse(week, "yyyy-MM-dd", new Date()))
           }

@@ -47,7 +47,7 @@ function Header() {
   return (
     <>
       <header
-        className="h-full w-full bg-dark-primary grid grid-cols-[1fr_1fr_1fr] p-2 place-items-center overflow-hidden"
+        className="h-full w-full bg-dark-primary grid grid-cols-[1fr_1fr_1fr] p-2 place-items-center"
         dir="rtl"
       >
         <div className="justify-self-center w-[80%] ">
