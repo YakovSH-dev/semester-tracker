@@ -47,16 +47,16 @@ function Header() {
   return (
     <>
       <header
-        className="w-full bg-blue-200 grid grid-cols-[1fr_1fr_1fr] p-2 place-items-center"
+        className="h-full w-full bg-dark-primary grid grid-cols-[1fr_1fr_1fr] p-2 place-items-center overflow-hidden"
         dir="rtl"
       >
         <div className="justify-self-center w-[80%] ">
-          <SearchBar onItemSelect={createFullCourse} />
+          {<SearchBar onItemSelect={createFullCourse} />}
         </div>
 
-        <div className="grid grid-flow-col gap-2 h-[50%] w-fit mx-auto my-auto">
+        <div className="grid grid-flow-col gap-2 mt-2 mb-2 overflow-hidden max-h-full">
           {courseIds.map((cId) => (
-            <div className="aspect-square" key={cId}>
+            <div className="aspect-square overflow-hidden max-h-full " key={cId}>
               <HeaderCourseBtn onClick={handleCourseClick} courseId={cId} />
             </div>
           ))}

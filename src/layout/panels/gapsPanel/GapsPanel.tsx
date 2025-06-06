@@ -42,13 +42,13 @@ function GapsPanel({
 
   return (
     <div className="relative h-full w-full flex flex-col p-1">
-      <header className="bg-red-100 text-center font-bold text-red-500 underline p-1">
+      <header className="text-center font-black font-primary bg-dark-primary danger-shadow text-dark-primary p-1 rounded">
         {" "}
         פערים
       </header>
       <main
         ref={mainSize}
-        className="flex-1 overflow-y-auto overflow-hidden hide-scrollbar bg-white"
+        className="flex-1 w-full overflow-y-auto overflow-hidden hide-scrollbar"
       >
         {gapEntries.map((g, i) => (
           <GapWeekCard
@@ -60,7 +60,7 @@ function GapsPanel({
         ))}
       </main>
       {isOverflowing && (
-        <div className="absolute bottom-0 left-0 w-full h-10 pointer-events-none bg-gradient-to-t from-white to-transparent flex items-end justify-center text-gray-600"></div>
+        <div className="absolute bottom-0 left-0 w-full h-10 pointer-events-none bg-gradient-to-t from-black to-transparent flex items-end justify-center"></div>
       )}
     </div>
   );

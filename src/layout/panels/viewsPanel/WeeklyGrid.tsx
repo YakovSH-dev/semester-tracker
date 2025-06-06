@@ -86,9 +86,9 @@ function WeeklyGrid({ week }: { week: Date }) {
     times.push(`${formattedHour}:30`);
   }
 
-  const lineColor = "#bfdbfe";
-  const rowColorA = "#bfdbfe";
-  const rowColorB = "white";
+  const lineColor = "#3c3c3c";
+  const rowColorA = "#2c2c2c"
+  const rowColorB = "#1e1e1e";
   const lineWidth = "1px";
 
   const gridStyle = {
@@ -97,7 +97,6 @@ function WeeklyGrid({ week }: { week: Date }) {
     gridTemplateRows: `auto repeat(${
       (endHour - startHour) * rowsPerHour
     }, minmax(auto, 1fr))`,
-    backgroundColor: `white`,
 
     backgroundImage: `
     repeating-linear-gradient(
@@ -110,8 +109,8 @@ function WeeklyGrid({ week }: { week: Date }) {
 
     repeating-linear-gradient(
       to bottom,
-      ${lineColor} 0px,
-      ${lineColor} ${lineWidth},
+      ${rowColorA}  0px,
+      ${rowColorA}  ${lineWidth},
 
       ${rowColorA} calc(${lineWidth} + ${lineWidth}),
       ${rowColorA} calc(${gridDims.frRowHeight}px - ${lineWidth}),
@@ -147,7 +146,7 @@ function WeeklyGrid({ week }: { week: Date }) {
   };
 
   return (
-    <div className="h-full w-full overflow-y-auto hide-scrollbar bg-blue-300 p-1 rounded-lg">
+    <div className="h-full w-full overflow-y-auto hide-scrollbar bg-dark-primary p-1 rounded-lg">
       <div
         className="h-full w-full  rounded-b-lg "
         style={gridStyle}
@@ -156,14 +155,14 @@ function WeeklyGrid({ week }: { week: Date }) {
       >
         {/* Corner Cell */}
         <div
-          className="bg-blue-300"
+          className="bg-dark-primary"
           ref={cornerRef}
           style={{ gridRow: "1", gridColumn: "1" }}
         ></div>
 
         {days.map((day, index) => (
           <div
-            className="text-md text-center bg-blue-300 font-bold text-white"
+            className="text-md text-center bg-dark-primary font-primary text-dark-primary shadow-[0_10Spx_10px_0px_rgba(255,255,255,0.1)]"
             key={day}
             style={{
               gridRow: "1",
@@ -177,7 +176,7 @@ function WeeklyGrid({ week }: { week: Date }) {
 
         {times.map((time, index) => (
           <div
-            className="text-xs text-center bg-blue-300 box-border px-1 font-black text-amber-50"
+            className="text-xs text-center bg-dark-primary box-border px-1 font-primary text-dark-primary"
             key={time}
             style={{
               gridColumn: "1",
@@ -200,7 +199,7 @@ function WeeklyGrid({ week }: { week: Date }) {
             }}
           >
             <div
-              className="absolute max-h-full min-h-full z-1 flex rounded-lg p-0.5 justify-center transition-transform duration-500 hover:max-h-500 hover:w-100 hover:z-10 overflow-hidden"
+              className="absolute max-h-full min-h-full z-1 flex rounded-lg p-0.5 justify-center transition-transform duration-500 hover:max-h-500 hover:z-10 overflow-hidden"
               style={{
                 left: `${
                   (entry.columnIndex ?? 0) * (100 / entry.totalColumns)

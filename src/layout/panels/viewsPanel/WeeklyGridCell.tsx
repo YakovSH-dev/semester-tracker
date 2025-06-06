@@ -96,7 +96,7 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
 
   return (
     <div
-      className={`relative overflow-hidden max-h-full max-w-full min-w-full rounded-md flex flex-col items-center group transform shadow transition-opacity duration-200 ${
+      className={`relative overflow-hidden max-h-full max-w-full hover:max-w-500 min-w-full rounded-md flex flex-col items-center group transform shadow transition-opacity duration-200 ${
         option.isSelected ? "opacity-100" : "opacity-50"
       } hover:opacity-100`}
     >
@@ -149,7 +149,7 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
         </div>
       )}
       <div
-        className={`flex-1 flex flex-col text-center p-1 cursor-pointer text-[0.6rem] font-bold w-full mt-3 min-h-0 overflow-hidden ${
+        className={`flex-1 flex flex-col text-center p-1 font-primary cursor-pointer text-[0.6rem] font-bold w-full mt-3 min-h-0 overflow-hidden ${
           completionPercent && completionPercent === 1
             ? "line-through text-gray-300"
             : "text-white"
@@ -164,9 +164,7 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
         <br />
         {option.instructor}
         <br />
-        {entry.startTime + " - " + entry.endTime}
-        <br />
-        {instances?.map((inst) => inst.hourIndex)}
+        {entry.endTime + " - " +  entry.startTime }
         <br />
         {completionPercent != undefined &&
           completionPercent > 0 &&
@@ -182,7 +180,8 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
 
           <div className="fixed inset-0 z-50 flex justify-center items-center">
             <SessionInstanceModal
-              sessionInstances={instances}
+              entryId={entryId}
+              week={week}
               onClose={() => setIsSessionInstanceWindowOpen([false, []])}
             />
           </div>

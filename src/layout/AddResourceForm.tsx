@@ -1,12 +1,12 @@
-import type { Link } from "../features/types/generalTypes";
+import type { IdType, Link } from "../features/types/generalTypes";
 
-function AddResourceForm({ onSubmit }: { onSubmit: (resource: Link) => void }) {
+function AddResourceForm({ onSubmit, id}: { onSubmit: (resource: Link, id?: IdType) => void, id?: IdType}) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const title = formData.get("title") as string;
     const url = formData.get("url") as string;
-    if (title && url) onSubmit({ title: title, url: url });
+    if (title && url) onSubmit({ title: title, url: url }, id);
   };
 
   return (

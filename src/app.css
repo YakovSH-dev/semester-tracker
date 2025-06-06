@@ -9,6 +9,46 @@
   scrollbar-width: none;
 }
 
+.bg-dark-primary {
+  background-color: #1e1e1e
+}
+
+.bg-dark-secondary {
+  background-color: #2c2c2c
+}
+
+.bg-dark-tertiary {
+  background-color: #383838;
+}
+
+.bg-dark-input {
+  background-color: #2a2a2a;
+}
+
+.text-dark-primary {
+  color: #e0e0e0;
+}
+
+.bg-danger-dark {
+  background-color: 	#3b0d0c
+}
+
+.bg-danger{
+  background-color: #a50505
+}
+
+.danger-text{
+  color: #f87171
+}
+
+.danger-shadow {
+  box-shadow: rgba(239, 68, 68, 0.4)
+}
+
+.font-primary {
+  font-family: 'Inter', sans-serif
+}
+
 @keyframes pop {
   0% {
     opacity: 0;

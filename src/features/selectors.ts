@@ -64,7 +64,7 @@ const getWeeklyInstancesForEntry = createSelector(
     (_: RootState, _week: string, entryId: string) => entryId,
   ],
   (instances, map, entryId) => {
-    return map.get(entryId)?.map((id) => instances[id]);
+    return (map.get(entryId) ?? []).map((id) => instances[id]);
   }
 );
 

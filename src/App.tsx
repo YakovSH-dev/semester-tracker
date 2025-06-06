@@ -34,7 +34,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="grid [grid-template-rows:75px_auto] w-full h-screen">
+    <div className="grid [grid-template-rows:65px_auto] w-full h-screen">
       <Header />
       <Dashboard />
     </div>

@@ -56,7 +56,7 @@ function SearchBar({
         }}
         onFocus={() => setIsDropdownDown(true)}
         placeholder="חפש קורס"
-        className="border border-gray-300 bg-white p-2 rounded w-full focus:outline-none focus:ring focus:ring-blue-300 text-black"
+        className="border border-gray-300 bg-dark-input p-2 rounded w-full focus:outline-none focus:ring focus:ring-white font-primary text-dark-primary"
       />
 
       {filtered.length > 0 && isDropdownDown && (

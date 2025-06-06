@@ -1,14 +1,16 @@
-import type { SessionInstance } from "../../../types/modelTypes";
+import type { IdType } from "../../../types/generalTypes";
 import SessionInstanceWindow from "./SessionInstanceWindow";
 import ReactDOM from "react-dom";
 
 type Props = {
-  sessionInstances: SessionInstance[];
+  entryId: IdType
+  week: Date
   onClose: () => void;
 };
 
 export default function SessionInstanceModal({
-  sessionInstances,
+  entryId,
+  week,
   onClose,
 }: Props) {
   return ReactDOM.createPortal(
@@ -19,7 +21,8 @@ export default function SessionInstanceModal({
       />
       <div className="fixed inset-0 z-50 flex justify-center items-center">
         <SessionInstanceWindow
-          sessionInstances={sessionInstances}
+          entryId={entryId}
+          week={week}
           onClose={onClose}
         />
       </div>

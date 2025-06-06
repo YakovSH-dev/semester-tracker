@@ -31,7 +31,7 @@ type SessionTemplate = {
 type SessionInstance = {
   id: IdType;
   hourIndex: number;
-  weekStartDate: string; // yyyy-mm-dd
+  weekStartDate: string; // yyyy-MM-dd
   isCompleted: boolean;
   resources: Link[];
   sessionTemplateId: string | null;

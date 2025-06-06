@@ -40,30 +40,29 @@ function WeeklyView({
   };
 
   return (
-    <div className="h-full flex flex-col bg-white p-1">
+    <div className="h-full flex flex-col bg-dark-tertiary p-1">
       <header className="grid grid-cols-[1fr_1fr_1fr] gap-2 place-items-end overflow-hidden max-h-15">
         <div
           onClick={() => handleCurrentWeekClick()}
-          className="col-start-1 cursor-pointer max-h-12  max-w-[70%] whitespace-nowrap mr-3 text-white text-ellipsis justify-self-center overflow-hidden"
+          className="col-start-1 cursor-pointer h-full rounded-t-lg max-w-[70%] whitespace-nowrap mr-3 bg-dark-primary text-dark-primary font-primary text-ellipsis justify-self-center overflow-hidden hover:bg-gray-500"
         >
-          <div className="font-light mt-0.5 rounded-t-lg text-md transition-all px-2 bg-blue-300 hover:bg-blue-200">
             <span
-              className="font-bold"
+              className="text-md px-2 m-0.5 "
               style={{ fontSize: `clamp(15px, 1vw, 20px)` }}
             >
               שבוע נוכחי - {currentWeekNum}{" "}
             </span>
-          </div>
         </div>
 
         <div
-          className="col-start-2 max-w-[100%] max-h-12 flex items-center flex-row font-bold whitespace-nowrap text-white text-center justify-self-center bg-blue-300 gap-1 rounded-t-lg overflow-hidden"
+          className="col-start-2 max-w-[100%] h-full flex items-center flex-row whitespace-nowrap text-dark-primary font-primary text-center justify-self-center bg-dark-primary gap-1 rounded-t-lg overflow-hidden"
           dir="rtl"
           style={{ fontSize: `clamp(15px, 1vw, 20px)` }}
         >
-          {selectedWeekNum > 1 && (
+
             <button
-              className="p-1 m-0.5 text-bold cursor-pointer flex  text-md  text-ellipsis transition-all rounded-full hover:bg-blue-200"
+              disabled={selectedWeekNum == 1}
+              className="p-1 m-0.5 cursor-pointer flex  text-md  text-ellipsis transition-all rounded-full hover:bg-gray-500"
               onClick={() => handlePreviousWeekClick()}
             >
               <svg
@@ -81,11 +80,12 @@ function WeeklyView({
                 />
               </svg>
             </button>
-          )}
-          שבוע {selectedWeekNum} : {format(selectedWeek, "dd.MM.yyyy")}
-          {selectedWeekNum < 13 && (
+
+            שבוע {selectedWeekNum} : {format(selectedWeek, "dd.MM.yyyy")}
+
             <button
-              className="p-1 m-0.5 rotate-180 cursor-pointer text-md transition-all rounded-full hover:bg-blue-200"
+            disabled={selectedWeekNum == 13 }
+              className="p-1 m-0.5 rotate-180 cursor-pointer text-md transition-all rounded-full hover:bg-gray-500"
               onClick={() => handleNextWeekClick()}
             >
               {" "}
@@ -104,7 +104,7 @@ function WeeklyView({
                 />
               </svg>
             </button>
-          )}
+
         </div>
       </header>
       <main className="flex-1 overflow-hidden">

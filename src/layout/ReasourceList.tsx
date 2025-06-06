@@ -2,10 +2,12 @@ import type { Link } from "../features/types/generalTypes";
 
 function ReasourceList({
   resources,
+  id,
   handleDeleteResource,
 }: {
   resources: Link[];
-  handleDeleteResource: (link: Link) => void;
+  id?:string;
+  handleDeleteResource: (link: Link, id?: string) => void;
 }) {
   return (
     <>
@@ -21,7 +23,7 @@ function ReasourceList({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                handleDeleteResource(resource);
+                handleDeleteResource(resource, id);
               }}
               className="invisible group-hover:visible hover:text-red-500 absolute font-bold top-0 text-xs left-1 cursor-pointer"
             >
