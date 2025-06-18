@@ -3,11 +3,11 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { RootState } from "../../../store";
-import type { SessionTemplate } from "../../types/modelTypes";
-import { createLoadThunkAndReducer } from "../../createLoadThunkAndReducer";
-import { STORE_KEYS } from "../../../utils/idbSetup";
-import type { IdType } from "../../types/generalTypes";
+import type { RootState } from "../../store";
+import type { SessionTemplate } from "../types/modelTypes";
+import { createLoadThunkAndReducer } from "../createLoadThunkAndReducer";
+import { STORE_KEYS } from "../../utils/idbSetup";
+import type { IdType } from "../types/generalTypes";
 
 const sessionTemplatesAdapter = createEntityAdapter({
   selectId: (sessionTemplate: SessionTemplate) => sessionTemplate.id,

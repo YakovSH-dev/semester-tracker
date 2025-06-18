@@ -3,18 +3,19 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { SessionInstance } from "../../types/modelTypes";
-import { createLoadThunkAndReducer } from "../../createLoadThunkAndReducer";
-import { STORE_KEYS } from "../../../utils/idbSetup";
-import type { IdType } from "../../types/generalTypes";
-import type { RootState } from "../../../store";
+import type { SessionInstance } from "../types/modelTypes";
+import { createLoadThunkAndReducer } from "../createLoadThunkAndReducer";
+import { STORE_KEYS } from "../../utils/idbSetup";
+import type { IdType } from "../types/generalTypes";
+import type { RootState } from "../../store";
+import { isBefore } from "date-fns";
 
 const sessionInstancesAdapter = createEntityAdapter({
   selectId: (sessionInstance: SessionInstance) => sessionInstance.id,
   sortComparer: (a, b) => {
     return a.weekStartDate === b.weekStartDate
       ? a.hourIndex - b.hourIndex
-      : new Date(a.weekStartDate) < new Date(b.weekStartDate)
+      : isBefore(new Date(b.weekStartDate), new Date(a.weekStartDate))
       ? -1
       : 1;
   },

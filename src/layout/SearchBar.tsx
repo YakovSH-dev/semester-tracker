@@ -40,7 +40,7 @@ function SearchBar({
     setFiltered(results);
   }, [query]);
 
-  const handleItemClicked = (item: Partial<RawTechnionCourse>) => {
+  const handleItemClicked = (item: any) => {
     if (!item?.schedule || !item?.general) return;
     const parsedItem = parseCourse(item as RawTechnionCourse);
     onItemSelect(parsedItem);

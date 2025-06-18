@@ -1,11 +1,12 @@
-import type { IdType, Link } from "./generalTypes";
+import type { IdType, Resource, AiQuiz, AiSummary } from "./generalTypes";
 
 type Model =
   | Course
   | SessionTemplate
   | SessionInstance
   | ScheduleOption
-  | ScheduleEntry;
+  | ScheduleEntry
+  | WeeklyContent;
 
 type Course = {
   id: IdType;
@@ -13,7 +14,7 @@ type Course = {
   faculty?: string;
   points?: number;
   color?: string;
-  resources: Link[];
+  resources: Resource[];
   sessionTemplatedIds: string[];
 };
 
@@ -26,6 +27,7 @@ type SessionTemplate = {
   courseId: string;
   scheduleOptionIds: string[];
   sessionInstanceIds: string[];
+  weeklyContentIds: string[];
 };
 
 type SessionInstance = {
@@ -33,7 +35,7 @@ type SessionInstance = {
   hourIndex: number;
   weekStartDate: string; // yyyy-MM-dd
   isCompleted: boolean;
-  resources: Link[];
+  resources: Resource[];
   sessionTemplateId: string | null;
 };
 
@@ -48,13 +50,25 @@ type ScheduleOption = {
 
 type ScheduleEntry = {
   id: string;
+  week: string; //  ISO 8601 (Date.toISOstring())
+  dayOfWeek: number; // 0 - 6 (0 - Sunday)
   startTime: string; //HH:MM
   endTime: string; //HH:MM
+
   durationInHours: number;
-  dayOfWeek: number; // 0 - 6 (0 - Sunday)
 
   scheduleOptionId: IdType;
-  sessionTemplateId: IdType | null;
+  sessionTemplateId: IdType;
+  sessionInstanceIds: IdType[];
+};
+
+type WeeklyContent = {
+  id: string;
+  sessionTemplateId: IdType;
+  week: string; //  ISO 8601 (Date.toISOstring())
+  resources: Resource[];
+  aiQuizes: AiQuiz[];
+  summary: AiSummary | null;
 };
 
 type FullCourseData = {
@@ -71,6 +85,7 @@ export type {
   SessionInstance,
   ScheduleOption,
   ScheduleEntry,
+  WeeklyContent,
   Model,
   FullCourseData,
 };

@@ -5,11 +5,12 @@ import type {
   SessionInstance,
   ScheduleOption,
   ScheduleEntry,
+  WeeklyContent,
 } from "../features/types/modelTypes";
 import type { IdType } from "../features/types/generalTypes";
 
 const DB_NAME = "myAppDatabase";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export const STORE_KEYS = {
   COURSE: "course",
@@ -17,6 +18,7 @@ export const STORE_KEYS = {
   SESSION_INSTANCE: "sessionInstance",
   SCHEDULE_OPTION: "scheduleOption",
   SCHEDULE_ENTRY: "scheduleEntry",
+  WEEKLY_CONTENT: "weeklyContent",
 } as const;
 
 export type StoreName = (typeof STORE_KEYS)[keyof typeof STORE_KEYS];
@@ -64,6 +66,7 @@ export type StoreTypeMap = {
   [STORE_KEYS.SESSION_INSTANCE]: SessionInstance;
   [STORE_KEYS.SCHEDULE_OPTION]: ScheduleOption;
   [STORE_KEYS.SCHEDULE_ENTRY]: ScheduleEntry;
+  [STORE_KEYS.WEEKLY_CONTENT]: WeeklyContent;
 };
 
 export async function addItem<K extends StoreName>(

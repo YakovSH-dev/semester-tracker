@@ -3,10 +3,10 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { RootState } from "../../../store";
-import type { ScheduleOption } from "../../types/modelTypes";
-import { createLoadThunkAndReducer } from "../../createLoadThunkAndReducer";
-import { STORE_KEYS } from "../../../utils/idbSetup";
+import type { RootState } from "../../store";
+import type { ScheduleOption } from "../types/modelTypes";
+import { createLoadThunkAndReducer } from "../createLoadThunkAndReducer";
+import { STORE_KEYS } from "../../utils/idbSetup";
 
 const scheduleOptionsAdapter = createEntityAdapter({
   selectId: (scheduleOption: ScheduleOption) => scheduleOption.id,

@@ -1,5 +1,5 @@
 import GapEntryCard from "./GapEntryCard";
-import { parse } from "date-fns";
+import { format } from "date-fns";
 
 function GapWeekCard({
   week,
@@ -11,21 +11,17 @@ function GapWeekCard({
   changeSelectedWeek: (week: Date) => void;
 }) {
   return (
-    <div className="flex w-full flex-col bg-dark-secondary mt-1 max-h-1/3 rounded-lg">
-
-      <header className="text-center text-sm font-bold p-1 text-dark-primary">
+    <div className="flex flex-col w-full bg-dark-secondary mb-2 border border-red-600 rounded-lg overflow-hidden">
+      <header className="min-w-full text-center text-sm mb-2 bg-red-600 font-bold text-dark-primary">
         <button
-          className="cursor-pointer p-1 text-sm px-3 bg-danger rounded-2xl h-fit w-fit"
-          onClick={() =>
-            changeSelectedWeek(parse(week, "yyyy-MM-dd", new Date()))
-          }
+          className="cursor-pointer p-1 text-sm px-3 rounded-2xl"
+          onClick={() => changeSelectedWeek(new Date(week))}
         >
-          {week}
+          {format(week, "dd/MM/yyyy")}
         </button>
       </header>
 
-      <main className="grid grid-rows-2 auto-cols-[31%] grid-flow-col max-h-full gap-2 p-2 overflow-x-auto">
-
+      <main className="grid gap-2 mb-2 mx-2">
         {entries.map((e) => (
           <GapEntryCard key={e} entryId={e} week={week} />
         ))}

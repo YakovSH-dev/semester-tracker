@@ -1,0 +1,43 @@
+:root {
+  --color-dark-primary: #1e1e1e;
+  --color-dark-secondary: #2c2c2c;
+  --color-dark-tertiary: #383838;
+  --color-dark-input: #2a2a2a;
+  --textcolor-dark-primary: #e0e0e0;
+}
+
+.bg-dark-primary {
+  background-color: #1e1e1e;
+}
+
+.bg-dark-secondary {
+  background-color: #2c2c2c;
+}
+
+.bg-dark-tertiary {
+  background-color: #383838;
+}
+
+.bg-dark-input {
+  background-color: #2a2a2a;
+}
+
+.text-dark-primary {
+  color: #e0e0e0;
+}
+
+.font-primary {
+  font-family: "Inter", sans-serif;
+}
+
+.bg-danger-dark {
+  background-color: #3b0d0c;
+}
+
+.bg-danger {
+  background-color: #a50505;
+}
+
+.danger-text {
+  color: #f87171;
+}

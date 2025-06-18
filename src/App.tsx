@@ -4,10 +4,11 @@ import { useDispatch } from "react-redux";
 import { type AppDispatch } from "./store";
 
 import { loadCourses } from "./features/courses/coursesSlice";
-import { loadSessionTemplates } from "./features/courses/sessions/sessionTemplatesSlice";
-import { loadSessionInstances } from "./features/courses/sessions/sessionInstancesSlice";
-import { loadScheduleOptions } from "./features/courses/sessions/scheduleOptionSlice";
-import { loadScheduleEntries } from "./features/courses/sessions/scheduleEntrySlice";
+import { loadSessionTemplates } from "./features/sessionTemplates/sessionTemplatesSlice";
+import { loadSessionInstances } from "./features/sessionInstances/sessionInstancesSlice";
+import { loadScheduleOptions } from "./features/scheduleOptions/scheduleOptionSlice";
+import { loadScheduleEntries } from "./features/scheduleEntries/scheduleEntrySlice";
+import { loadweeklyContents } from "./features/weeklyContent/weeklyContentSlice";
 
 import Header from "./layout/Header";
 import Dashboard from "./layout/Dashboard";
@@ -20,6 +21,7 @@ export async function loadAllStateFromIDB(dispatch: AppDispatch) {
     dispatch(loadSessionInstances()),
     dispatch(loadScheduleOptions()),
     dispatch(loadScheduleEntries()),
+    dispatch(loadweeklyContents()),
   ]);
 }
 
@@ -34,9 +36,9 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="grid [grid-template-rows:65px_auto] w-full h-screen">
+    <div className="flex flex-col w-full h-screen">
       <Header />
-      <Dashboard />
+      <Dashboard className="flex-1" />
     </div>
   );
 }

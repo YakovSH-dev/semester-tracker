@@ -1,0 +1,12 @@
+@import "./colors.css";
+
+.btn {
+  padding: 5px;
+  border-radius: 5px;
+  color: var(--textcolor-dark-primary);
+  cursor: pointer;
+}
+
+.btn-generate {
+  background-color: var(--color-dark-primary);
+}

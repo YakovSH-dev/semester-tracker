@@ -1,20 +1,28 @@
-import { scheduleOptionsSelectors } from "../../../features/courses/sessions/scheduleOptionSlice";
+import { scheduleOptionsSelectors } from "../../../features/scheduleOptions/scheduleOptionSlice";
 import { courseSelectors } from "../../../features/courses/coursesSlice";
-import { sessionTemplatesSelectors } from "../../../features/courses/sessions/sessionTemplatesSlice";
-import { getWeeklyInstancesForEntry } from "../../../features/selectors";
-import { updateManySessionInstances } from "../../../features/courses/sessions/sessionInstancesSlice";
+import { sessionTemplatesSelectors } from "../../../features/sessionTemplates/sessionTemplatesSlice";
+import {
+  getGeneralDataForEntry,
+  getWeeklyInstancesForEntry,
+} from "../../../features/selectors";
+import { updateManySessionInstances } from "../../../features/sessionInstances/sessionInstancesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../store";
 import type { IdType } from "../../../features/types/generalTypes";
-import { entrySelectors } from "../../../features/courses/sessions/scheduleEntrySlice";
+import { entrySelectors } from "../../../features/scheduleEntries/scheduleEntrySlice";
 
-function GapEntryCard({ entryId, week }: { entryId: IdType; week: string }) {
+function GapEntryCard({ entryId }: { entryId: IdType; week: string }) {
   const dispatch = useDispatch();
+
   const entry = useSelector((state: RootState) =>
     entrySelectors.selectById(state, entryId)
   );
   const instances = useSelector((state: RootState) =>
-    getWeeklyInstancesForEntry(state, week, entry.id)
+    getWeeklyInstancesForEntry(state, entry.id)
+  );
+
+  const displayData = useSelector((state: RootState) =>
+    getGeneralDataForEntry(state, entryId)
   );
   const option = useSelector((state: RootState) =>
     scheduleOptionsSelectors.selectById(state, entry.scheduleOptionId)
@@ -58,9 +66,13 @@ function GapEntryCard({ entryId, week }: { entryId: IdType; week: string }) {
       style={{ borderColor: `${course.color}` }}
       onClick={handleClickComplete}
     >
-
-      <pre className="text-[0.6rem] font-bold text-dark-primary font-primary overflow-ellipsis text-wrap" dir="rtl">
-        {template.type.concat(` (${entry.durationInHours} ש'): \n ${course.name}`)}
+      <pre
+        className="text-[0.6rem] font-bold text-dark-primary font-primary overflow-ellipsis text-wrap"
+        dir="rtl"
+      >
+        {template.type.concat(
+          ` (${displayData.duration} ש'): \n ${displayData.courseName}`
+        )}
       </pre>
     </button>
   );

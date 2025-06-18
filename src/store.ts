@@ -13,7 +13,7 @@ import {
   addManySessionTemplates,
   updateSessionTemplate,
   deleteSessionTemplate,
-} from "./features/courses/sessions/sessionTemplatesSlice";
+} from "./features/sessionTemplates/sessionTemplatesSlice";
 import {
   sessionInstancesReducer,
   addSessionInstance,
@@ -21,21 +21,28 @@ import {
   updateSessionInstance,
   deleteSessionInstance,
   updateManySessionInstances,
-} from "./features/courses/sessions/sessionInstancesSlice";
+} from "./features/sessionInstances/sessionInstancesSlice";
 import {
   scheduleOptionsReducer,
   addScheduleOption,
   addManyScheduleOptions,
   updateScheduleOption,
   deleteScheduleOption,
-} from "./features/courses/sessions/scheduleOptionSlice";
+} from "./features/scheduleOptions/scheduleOptionSlice";
 import {
   scheduleEntriesReducer,
   addScheduleEntry,
   addManyScheduleEntries,
   updateScheduleEntry,
   deleteScheduleEntry,
-} from "./features/courses/sessions/scheduleEntrySlice";
+} from "./features/scheduleEntries/scheduleEntrySlice";
+import {
+  weeklyContentReducer,
+  addWeeklyContent,
+  addManyWeeklyContents,
+  updateWeeklyContent,
+  deleteWeeklyContent,
+} from "./features/weeklyContent/weeklyContentSlice";
 import { cascadeDeleteMiddleware } from "./middleware/cascadeDeleteMiddleware";
 
 import { CRUDIdbMiddleware } from "./middleware/idbMiddleware";
@@ -47,6 +54,7 @@ export const store = configureStore({
     sessionInstances: sessionInstancesReducer,
     scheduleOptions: scheduleOptionsReducer,
     scheduleEntries: scheduleEntriesReducer,
+    weeklyContents: weeklyContentReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -86,6 +94,13 @@ export const store = configureStore({
         addManyScheduleEntries,
         updateScheduleEntry,
         deleteScheduleEntry
+      ),
+      CRUDIdbMiddleware(
+        "weeklyContent",
+        addWeeklyContent,
+        addManyWeeklyContents,
+        updateWeeklyContent,
+        deleteWeeklyContent
       )
     ),
 });

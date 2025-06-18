@@ -1,27 +1,25 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { entrySelectors } from "../../../features/courses/sessions/scheduleEntrySlice";
+import { entrySelectors } from "../../../features/scheduleEntries/scheduleEntrySlice";
 import type { IdType } from "../../../features/types/generalTypes";
 import type { RootState } from "../../../store";
 import {
   scheduleOptionsSelectors,
   updateScheduleOption,
-} from "../../../features/courses/sessions/scheduleOptionSlice";
+} from "../../../features/scheduleOptions/scheduleOptionSlice";
+import { updateSessionTemplate } from "../../../features/sessionTemplates/sessionTemplatesSlice";
 import {
-  sessionTemplatesSelectors,
-  updateSessionTemplate,
-} from "../../../features/courses/sessions/sessionTemplatesSlice";
-import { courseSelectors } from "../../../features/courses/coursesSlice";
-import { getWeeklyInstancesForEntry } from "../../../features/selectors";
-import { updateManySessionInstances } from "../../../features/courses/sessions/sessionInstancesSlice";
-import { format } from "date-fns";
+  getGeneralDataForEntry,
+  getWeeklyInstancesForEntry,
+} from "../../../features/selectors";
+import { updateManySessionInstances } from "../../../features/sessionInstances/sessionInstancesSlice";
 
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import type { SessionInstance } from "../../../features/types/modelTypes";
 
-import SessionInstanceModal from "../../../features/courses/sessions/sessionInstanceComponents/SessionInstanceModal";
+import SessionInstanceModal from "../../../features/sessionInstances/sessionInstanceComponents/SessionInstanceModal";
 
 function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
   const [isSessionInstanceWindowOpen, setIsSessionInstanceWindowOpen] =
@@ -33,20 +31,16 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
     entrySelectors.selectById(state, entryId)
   );
 
+  const displayData = useSelector((state: RootState) =>
+    getGeneralDataForEntry(state, entryId)
+  );
+
   const instances = useSelector((state: RootState) =>
-    getWeeklyInstancesForEntry(state, format(week, "yyyy-MM-dd"), entryId)
+    getWeeklyInstancesForEntry(state, entryId)
   );
 
   const option = useSelector((state: RootState) =>
     scheduleOptionsSelectors.selectById(state, entry.scheduleOptionId)
-  );
-
-  const template = useSelector((state: RootState) =>
-    sessionTemplatesSelectors.selectById(state, option.sessionTemplateId)
-  );
-
-  const course = useSelector((state: RootState) =>
-    courseSelectors.selectById(state, template.courseId)
   );
 
   let completionPercent = null;
@@ -76,7 +70,7 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
       completionPercent === 0 || completionPercent === 1
         ? instances
         : instances?.filter((inst) => !inst.isCompleted);
-
+    console.log(instancesToUpdate);
     const payload = instancesToUpdate?.map((inst) => {
       return { id: inst.id, changes: { isCompleted: !inst.isCompleted } };
     });
@@ -96,14 +90,14 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
 
   return (
     <div
-      className={`relative overflow-hidden max-h-full max-w-full hover:max-w-500 min-w-full rounded-md flex flex-col items-center group transform shadow transition-opacity duration-200 ${
+      className={`relative overflow-hidden max-h-full w-full hover:max-w-500 min-w-full rounded-md flex flex-col items-center group transform shadow transition-opacity duration-200 ${
         option.isSelected ? "opacity-100" : "opacity-50"
       } hover:opacity-100`}
     >
       <div
         className="absolute inset-0 rounded-md -z-10"
         style={{
-          background: course.color,
+          background: displayData.color,
           filter: `brightness(${
             completionPercent
               ? Math.max(100 - completionPercent * 100, 75)
@@ -131,25 +125,27 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
           </svg>
         </div>
       )}
+
       {option.isSelected && (
-        <div className="flex flex-row w-full h-fit gap-1 overflow-hidden">
+        <div className="flex flex-row gap-2 pb-4 w-full">
           <button
-            className="h-0  group-hover:h-4 mx-2 group-hover:visible bg-green-400  transition-all cursor-pointer z-1 w-[50%] rounded-b-md "
+            className="h-0 w-full group-hover:h-4 group-hover:visible bg-green-400  transition-all cursor-pointer z-1 rounded-bl-md"
             onClick={handleClickComplete}
           >
             {" "}
-            <CheckIcon className="h-full w-full  text-gray-700" />
+            <CheckIcon className="h-full w-full text-gray-700" />
           </button>
           <button
-            className="h-0  group-hover:h-4 mx-2 group-hover:visible bg-green-400  transition-all cursor-pointer z-1 w-[50%] rounded-b-md "
+            className="h-0 w-full group-hover:h-4 group-hover:visible bg-green-400  transition-all cursor-pointer z-1 rounded-br-md "
             onClick={handleSetSelected}
           >
             <ArrowPathIcon className="h-full w-full text-gray-700" />
           </button>
         </div>
       )}
+
       <div
-        className={`flex-1 flex flex-col text-center p-1 font-primary cursor-pointer text-[0.6rem] font-bold w-full mt-3 min-h-0 overflow-hidden ${
+        className={`text-center flex-1 p-1 font-primary cursor-pointer text-sm font-bold ${
           completionPercent && completionPercent === 1
             ? "line-through text-gray-300"
             : "text-white"
@@ -158,19 +154,20 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
           !option.isSelected ? handleSetSelected : handleOpenSessionWindow
         }
       >
-        {course.name}
+        {displayData.courseName}
         <br />
-        {template.type}
+        {displayData.type}
         <br />
-        {option.instructor}
+        {displayData.instructor}
         <br />
-        {entry.endTime + " - " +  entry.startTime }
+        {displayData.endTime + " - " + displayData.startTime}
         <br />
         {completionPercent != undefined &&
           completionPercent > 0 &&
           completionPercent < 1 &&
           `ראית ${completionPercent * 100}% מהרצאה זו`}
       </div>
+
       {isSessionInstanceWindowOpen[0] && instances && (
         <>
           <div
@@ -180,7 +177,7 @@ function WeeklyGridCell({ entryId, week }: { entryId: IdType; week: Date }) {
 
           <div className="fixed inset-0 z-50 flex justify-center items-center">
             <SessionInstanceModal
-              entryId={entryId}
+              templateId={entry.sessionTemplateId}
               week={week}
               onClose={() => setIsSessionInstanceWindowOpen([false, []])}
             />

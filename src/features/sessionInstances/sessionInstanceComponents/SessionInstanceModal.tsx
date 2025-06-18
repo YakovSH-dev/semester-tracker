@@ -1,15 +1,15 @@
-import type { IdType } from "../../../types/generalTypes";
+import type { IdType } from "../../types/generalTypes";
 import SessionInstanceWindow from "./SessionInstanceWindow";
 import ReactDOM from "react-dom";
 
 type Props = {
-  entryId: IdType
-  week: Date
+  templateId: IdType;
+  week: Date;
   onClose: () => void;
 };
 
 export default function SessionInstanceModal({
-  entryId,
+  templateId,
   week,
   onClose,
 }: Props) {
@@ -21,7 +21,7 @@ export default function SessionInstanceModal({
       />
       <div className="fixed inset-0 z-50 flex justify-center items-center">
         <SessionInstanceWindow
-          entryId={entryId}
+          templateId={templateId}
           week={week}
           onClose={onClose}
         />

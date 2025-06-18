@@ -3,17 +3,21 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import { type RootState } from "../../../store";
-import type { ScheduleEntry } from "../../types/modelTypes";
-import { createLoadThunkAndReducer } from "../../createLoadThunkAndReducer";
-import { STORE_KEYS } from "../../../utils/idbSetup";
+import { differenceInWeeks } from "date-fns";
+import { type RootState } from "../../store";
+import type { ScheduleEntry } from "../types/modelTypes";
+import { createLoadThunkAndReducer } from "../createLoadThunkAndReducer";
+import { STORE_KEYS } from "../../utils/idbSetup";
 
 const scheduleEntriesAdapter = createEntityAdapter({
   selectId: (scheduleEntry: ScheduleEntry) => scheduleEntry.id,
   sortComparer: (a, b) => {
     const [aHours, aMinutes] = a.startTime.split(":").map(Number);
     const [bHours, bMinutes] = a.startTime.split(":").map(Number);
-    return a.dayOfWeek === b.dayOfWeek
+
+    return a.week === b.week
+      ? differenceInWeeks(new Date(a.week), new Date(b.week))
+      : a.dayOfWeek === b.dayOfWeek
       ? (aHours + aMinutes) / 60 - (bHours + bMinutes) / 60
       : a.dayOfWeek - b.dayOfWeek;
   },

@@ -15,44 +15,72 @@ type ItemsState<T extends Model> = {
 };
 
 type RawTechnionCourse = {
-  general?:
+  general: {
+    "מספר מקצוע": string;
+    "שם מקצוע": string;
+    סילבוס: string;
+    פקולטה: string;
+    "מסגרת לימודים": string;
+    "מקצועות קדם": string;
+    נקודות: string;
+    אחראים: string;
+    הערות: string;
+    "מועד ב": string;
+    "בוחן מועד א": string;
+  };
+  schedule:
     | {
-        "מספר מקצוע"?: string;
-        "שם מקצוע"?: string;
-        סילבוס?: string;
-        פקולטה?: string;
-        "מסגרת לימודים"?: string;
-        "מקצועות קדם"?: string;
-        נקודות?: string;
-        אחראים?: string;
-        הערות?: string;
-        "מועד ב"?: string;
-        "בוחן מועד א"?: string;
-      }
-    | undefined;
-  schedule?:
-    | {
-        קבוצה?: number;
-        סוג?: string;
-        יום?: string;
-        שעה?: string;
-        בניין?: string;
-        חדר?: number;
-        "מרצה/מתרגל"?: string;
-        "מס."?: number;
-      }[]
-    | undefined;
+        קבוצה: number;
+        סוג: string;
+        יום: string;
+        שעה: string;
+        בניין: string;
+        חדר: number;
+        "מרצה/מתרגל": string;
+        "מס.": number;
+      }[];
 };
 
-type Link = {
-  title: string;
+type Resource = {
   url: string;
+  title: string;
+  type: string;
 };
+
+type AiQuizQuestion = {
+  question: string;
+  difficulty: "EASY" | "MEDIUM" | "HARD" | "VERY_HARD";
+  possibleAnswers: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  correctAnswer: "a" | "b" | "c" | "d";
+  explanation: string;
+  selection: "a" | "b" | "c" | "d" | undefined;
+};
+
+type AiQuiz = {
+  type: "quiz";
+  questions: AiQuizQuestion[];
+};
+
+type AiSummary = {
+  type: "summary";
+  text: string;
+};
+
+type AiContent = AiSummary | AiQuiz[];
 
 export type {
   IdType,
   ItemsState,
   ExtendedEntityState,
   RawTechnionCourse,
-  Link,
+  AiQuiz,
+  AiQuizQuestion,
+  AiSummary,
+  AiContent,
+  Resource,
 };

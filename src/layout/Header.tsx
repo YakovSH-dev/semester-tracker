@@ -3,21 +3,25 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 
 import type { RootState } from "../store";
-import type { FullCourseData } from "../features/types/modelTypes";
+import type {
+  FullCourseData,
+  WeeklyContent,
+} from "../features/types/modelTypes";
 
 import {
   addCourse,
   courseSelectors,
   deleteCourse,
 } from "../features/courses/coursesSlice";
-import { addManySessionTemplates } from "../features/courses/sessions/sessionTemplatesSlice";
-import { addManySessionInstances } from "../features/courses/sessions/sessionInstancesSlice";
-import { addManyScheduleOptions } from "../features/courses/sessions/scheduleOptionSlice";
-import { addManyScheduleEntries } from "../features/courses/sessions/scheduleEntrySlice";
+import { addManySessionTemplates } from "../features/sessionTemplates/sessionTemplatesSlice";
+import { addManySessionInstances } from "../features/sessionInstances/sessionInstancesSlice";
+import { addManyScheduleOptions } from "../features/scheduleOptions/scheduleOptionSlice";
+import { addManyScheduleEntries } from "../features/scheduleEntries/scheduleEntrySlice";
+import { addManyWeeklyContents } from "../features/weeklyContent/weeklyContentSlice";
 
 import SearchBar from "./SearchBar";
-import HeaderCourseBtn from "../features/courses/courseComponents/HeaderCourseBtn";
-import CourseWindow from "../features/courses/courseComponents/CourseWindow";
+import HeaderCourseBtn from "../features/courses/HeaderCourseBtn";
+import CourseWindow from "../features/courses/CourseWindow";
 import type { IdType } from "../features/types/generalTypes";
 
 function Header() {
@@ -35,28 +39,31 @@ function Header() {
     setIsCourseWindowOpen([false, ""]);
     dispatch(deleteCourse(courseId));
   };
-  const createFullCourse = (courseData: FullCourseData) => {
+  const createFullCourse = (
+    courseData: FullCourseData & { weeklyContents: WeeklyContent[] }
+  ) => {
     if (courseIds.find((cid) => cid === courseData.course.id)) return;
     dispatch(addCourse(courseData.course));
     dispatch(addManySessionTemplates(courseData.sessionTemplates));
     dispatch(addManySessionInstances(courseData.sessionInstances));
     dispatch(addManyScheduleOptions(courseData.scheduleOptions));
     dispatch(addManyScheduleEntries(courseData.scheduleEntries));
+    dispatch(addManyWeeklyContents(courseData.weeklyContents));
   };
 
   return (
-    <>
+    <div className="flex">
       <header
-        className="h-full w-full bg-dark-primary grid grid-cols-[1fr_1fr_1fr] p-2 place-items-center"
+        className="h-fit w-full bg-dark-primary flex flex-row p-2 gap-5 justify-center place-items-center"
         dir="rtl"
       >
-        <div className="justify-self-center w-[80%] ">
+        <div className="justify-self-center ">
           {<SearchBar onItemSelect={createFullCourse} />}
         </div>
 
-        <div className="grid grid-flow-col gap-2 mt-2 mb-2 overflow-hidden max-h-full">
+        <div className="flex flex-row  mt-1 mb-1 ">
           {courseIds.map((cId) => (
-            <div className="aspect-square overflow-hidden max-h-full " key={cId}>
+            <div className="aspect-square mx-2" key={cId}>
               <HeaderCourseBtn onClick={handleCourseClick} courseId={cId} />
             </div>
           ))}
@@ -78,7 +85,7 @@ function Header() {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
 

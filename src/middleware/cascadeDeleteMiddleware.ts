@@ -1,10 +1,11 @@
 import { type Middleware } from "@reduxjs/toolkit";
 import { type RootState } from "../store";
 import { deleteCourse } from "../features/courses/coursesSlice";
-import { deleteSessionTemplate } from "../features/courses/sessions/sessionTemplatesSlice";
-import { deleteSessionInstance } from "../features/courses/sessions/sessionInstancesSlice";
-import { deleteScheduleOption } from "../features/courses/sessions/scheduleOptionSlice";
-import { deleteScheduleEntry } from "../features/courses/sessions/scheduleEntrySlice";
+import { deleteSessionTemplate } from "../features/sessionTemplates/sessionTemplatesSlice";
+import { deleteSessionInstance } from "../features/sessionInstances/sessionInstancesSlice";
+import { deleteScheduleOption } from "../features/scheduleOptions/scheduleOptionSlice";
+import { deleteScheduleEntry } from "../features/scheduleEntries/scheduleEntrySlice";
+import { deleteWeeklyContent } from "../features/weeklyContent/weeklyContentSlice";
 
 export const cascadeDeleteMiddleware: Middleware =
   (storeAPI) => (next) => (action) => {
@@ -28,12 +29,18 @@ export const cascadeDeleteMiddleware: Middleware =
       const relatedSessionInstanceIds =
         state.sessionTemplates.entities[sessionTemplateId].sessionInstanceIds;
 
+      const relatedWeeklyContentIds =
+        state.sessionTemplates.entities[sessionTemplateId].weeklyContentIds;
       for (const optionId of relatedScheduleOptionIds) {
         storeAPI.dispatch(deleteScheduleOption(optionId));
       }
 
       for (const instanceId of relatedSessionInstanceIds) {
         storeAPI.dispatch(deleteSessionInstance(instanceId));
+      }
+
+      for (const weeklyContentId of relatedWeeklyContentIds) {
+        storeAPI.dispatch(deleteWeeklyContent(weeklyContentId));
       }
     } else if (deleteScheduleOption.match(action)) {
       const scheduleOptionId = action.payload;

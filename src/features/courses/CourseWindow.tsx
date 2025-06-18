@@ -1,13 +1,14 @@
-import type { IdType, Link } from "../../types/generalTypes";
+import type { IdType, Resource } from "../types/generalTypes";
+import { deletePDFResource } from "../../firebase/storage";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { courseSelectors, updateCourse } from "../coursesSlice";
-import type { RootState } from "../../../store";
-import { getRandomHexColor } from "../../../utils/misc";
+import { courseSelectors, updateCourse } from "./coursesSlice";
+import type { RootState } from "../../store";
+import { getRandomHexColor } from "../../utils/misc";
 
-import AddResourceForm from "../../../layout/AddResourceForm";
+import AddResourceForm from "../../layout/AddResourceForm";
 
-import ReasourceList from "../../../layout/ReasourceList";
+import ReasourceList from "../../layout/ReasourceList";
 
 function CourseWindow({
   courseId,
@@ -23,12 +24,15 @@ function CourseWindow({
   const course = useSelector((state: RootState) =>
     courseSelectors.selectById(state, courseId)
   );
+
   const handleChangeColor = () => {
     const newColor = getRandomHexColor();
     dispatch(updateCourse({ id: courseId, changes: { color: newColor } }));
   };
-  const handleAddResource = (resource: Link) => {
-    if (course.resources.filter((r) => r.url === resource.url).length) return;
+
+  const handleAddResource = (resource: Resource) => {
+    if (course.resources.find((r) => r.title === resource.title) != undefined)
+      return;
     dispatch(
       updateCourse({
         id: courseId,
@@ -36,13 +40,17 @@ function CourseWindow({
       })
     );
   };
-  const handleDeleteResource = (resource: Link) => {
+
+  const handleDeleteResource = (resource: Resource) => {
+    if (resource.type == "file") {
+      deletePDFResource(resource);
+    }
     dispatch(
       updateCourse({
         id: courseId,
         changes: {
           resources: [...(course.resources || [])].filter(
-            (r) => r.url != resource.url
+            (r) => r.title != resource.title
           ),
         },
       })
@@ -64,12 +72,12 @@ function CourseWindow({
         {" "}
         <div className="grid [grid-template-rows:auto_1fr_1fr_1fr]">
           <section className="h-fit w-full border-b border-l  border-gray-200 grid auto-cols-3 p-1">
-            <h1
+            <header
               className="col-start-1 text-sm font-bold rounded-4xl text-center p-1"
               style={{ background: `${course.color}` }}
             >
               {course.name}
-            </h1>
+            </header>
             <div className="col-start-3 flex flex-row" dir="ltr">
               <button
                 className="border border-red-400 h-6 w-6 rounded hover:bg-red-200 hover:opacity-70 mx-2"
@@ -112,23 +120,19 @@ function CourseWindow({
             </div>
           </section>
           <section className="relative h-full w-full border-l border-gray-200">
-            sdfs
             <div className="absolute bottom-0 w-11/12 border-b border-gray-200"></div>
           </section>
 
           <section className="relative h-full w-full border-l border-gray-200">
-            sdfsdf
             <div className="absolute bottom-0 w-11/12 border-b border-gray-200"></div>
           </section>
 
-          <section className="h-full w-full border-l border-gray-200">
-            sdfsdf
-          </section>
+          <section className="h-full w-full border-l border-gray-200"></section>
         </div>
         <div className="grid grid-rows-2 w-full items-center">
           <section className="h-full w-full border-b border-gray-200 p-1 ">
             <header className="text-sm font-light border-b border-gray-200  grid grid-cols-[1fr_1fr]">
-              <h1>קישורים</h1>{" "}
+              <header>קישורים</header>{" "}
               <div className="relative flex-row" dir="ltr">
                 <button
                   className="rounded-full h-5 w-5 border cursor-pointer"
@@ -151,7 +155,7 @@ function CourseWindow({
               />
             </main>
           </section>
-          <section className="h-full w-full ">sdfsdfs</section>
+          <section className="h-full w-full "></section>
         </div>
       </div>
     </div>

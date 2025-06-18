@@ -5,12 +5,17 @@ import type {
   ScheduleOption,
   SessionTemplate,
   SessionInstance,
+  WeeklyContent,
 } from "../features/types/modelTypes";
 import type { IdType, RawTechnionCourse } from "../features/types/generalTypes";
 import { getRandomHexColor } from "./misc";
 
-import { SEMESTER_START_DATE, SEMESTER_END_DATE } from "../tempGlobalData";
-import { addWeeks, isBefore, startOfWeek, format } from "date-fns";
+import {
+  SEMESTER_END_DATE,
+  SEMESTER_START_DATE,
+  SEMESTER_WEEK_NUM,
+} from "../tempGlobalData";
+import { addWeeks, startOfWeek, isBefore } from "date-fns";
 
 function parseDayOfWeek(day: string): number {
   const map: Record<string, number> = {
@@ -48,20 +53,18 @@ function parseTimeRange(range: string): {
 function generateInstances(
   templateId: IdType,
   weeklyHoursNum: number,
-  startDateStr: string,
-  endDateStr: string
+  startDateStr: string
 ): SessionInstance[] {
   const startDate = new Date(startDateStr);
-  const endDate = new Date(endDateStr);
   let curDate = startOfWeek(startDate);
   const instances: SessionInstance[] = [];
-  while (isBefore(curDate, endDate)) {
+  for (let i = 0; i < SEMESTER_WEEK_NUM; i++) {
     for (let i = 0; i < weeklyHoursNum; i++) {
       const id = uuidv4();
       instances.push({
         id: id,
         hourIndex: i,
-        weekStartDate: format(curDate, "yyyy-MM-dd"),
+        weekStartDate: curDate.toISOString(),
         isCompleted: false,
         resources: [],
         sessionTemplateId: templateId,
@@ -78,6 +81,7 @@ export default function parseCourse(raw: RawTechnionCourse): {
   scheduleOptions: ScheduleOption[];
   scheduleEntries: ScheduleEntry[];
   sessionInstances: SessionInstance[];
+  weeklyContents: WeeklyContent[];
 } {
   const courseId: IdType = raw.general?.["מספר מקצוע"] || uuidv4();
 
@@ -87,20 +91,25 @@ export default function parseCourse(raw: RawTechnionCourse): {
     ScheduleOption & { weeklyDuration: number }
   >();
   const scheduleEntries: ScheduleEntry[] = [];
+  const weeklyContents: WeeklyContent[] = [];
 
-  if (raw.schedule)
-    for (const sched of raw.schedule) {
-      const type = sched["סוג"]?.trim().toUpperCase() ?? "סוג";
-      const instructor = sched["מרצה/מתרגל"] ?? "מרצה/מתרגל";
-      const group = sched["קבוצה"] ?? -1;
-      const timeRange = sched["שעה"] ?? "08:00-09:00";
-      const dayOfWeek = sched["יום"] ?? "שבת";
-      const templateKey = type;
-      const optionKey = `${group}-${templateKey}`;
+  if (!raw.schedule) {
+    throw "No schedule data for this course";
+  }
+  for (const sched of raw.schedule) {
+    const type = sched["סוג"]?.trim().toUpperCase() ?? "סוג";
+    const instructor = sched["מרצה/מתרגל"] ?? "מרצה/מתרגל";
+    const group = sched["קבוצה"] ?? -1;
+    const timeRange = sched["שעה"] ?? "08:00-09:00";
+    const dayOfWeek = sched["יום"] ?? "שבת";
+    const templateKey = type;
+    const optionKey = `${group}-${templateKey}`;
 
-      let template = templates.get(templateKey);
-      if (!template) {
-        const templateId = uuidv4();
+    let template = templates.get(templateKey);
+
+    if (!template) {
+      const templateId = uuidv4();
+      for (let i = 0; i < SEMESTER_WEEK_NUM; i++) {
         template = {
           id: templateId,
           type,
@@ -109,44 +118,62 @@ export default function parseCourse(raw: RawTechnionCourse): {
           courseId,
           scheduleOptionIds: [],
           sessionInstanceIds: [],
+          weeklyContentIds: [],
         };
         templates.set(templateKey, template);
       }
+    }
 
-      let option = optionsWithDur.get(optionKey);
-      if (!option) {
-        const optionId = uuidv4();
-        const templateId = templates.get(type)?.id;
-        option = {
-          id: optionId,
-          instructor,
-          isSelected: false,
-          sessionTemplateId: templateId || "",
-          scheduleEntryIds: [],
-          weeklyDuration: 0,
-        };
-        optionsWithDur.set(optionKey, option);
-        template.scheduleOptionIds.push(option.id);
-      }
+    let option = optionsWithDur.get(optionKey);
 
-      const { startTime, endTime, duration } = parseTimeRange(timeRange);
-      const entryId = uuidv4();
+    if (!option) {
+      const optionId = uuidv4();
       const templateId = templates.get(type)?.id;
+      if (!templateId) {
+        console.error("Error: templateId not found in map");
+        throw new Error("ERROR");
+      }
+      option = {
+        id: optionId,
+        instructor,
+        isSelected: false,
+        sessionTemplateId: templateId || "",
+        scheduleEntryIds: [],
+        weeklyDuration: 0,
+      };
+      optionsWithDur.set(optionKey, option);
+      template!.scheduleOptionIds.push(option.id);
+    }
+
+    const { startTime, endTime, duration } = parseTimeRange(timeRange);
+    let startWeek = startOfWeek(new Date(SEMESTER_START_DATE));
+
+    const entryIds = [];
+    for (let i = 0; i < SEMESTER_WEEK_NUM; i++) {
+      const entryId = uuidv4();
+      const curWeek = addWeeks(startWeek, i);
+      const templateId = templates.get(type)!.id;
+
       scheduleEntries.push({
         id: entryId,
+        week: curWeek.toISOString(),
         startTime,
         endTime,
         durationInHours: duration,
         dayOfWeek: parseDayOfWeek(dayOfWeek),
         scheduleOptionId: option.id,
-        sessionTemplateId: templateId || null,
+        sessionTemplateId: templateId,
+        sessionInstanceIds: [],
       });
 
-      option.scheduleEntryIds.push(entryId);
-      option.weeklyDuration += duration;
-
-      template.weeklyHoursNum = option.weeklyDuration;
+      entryIds.push(entryId);
     }
+
+    option.scheduleEntryIds.push(...entryIds);
+    option.weeklyDuration += duration;
+
+    template!.weeklyHoursNum = option.weeklyDuration;
+  }
 
   const course: Course = {
     id: courseId,
@@ -157,30 +184,129 @@ export default function parseCourse(raw: RawTechnionCourse): {
     resources: [],
     sessionTemplatedIds: Array.from(templates.values()).map((t) => t.id),
   };
+
   const sessionInstances: SessionInstance[] = [];
   const sessionTemplates = Array.from(templates.values());
+  const scheduleOptions = Array.from(optionsWithDur.values());
+
   if (templates) {
     for (const template of sessionTemplates) {
       if (!template) continue;
-      sessionInstances.push(
-        ...generateInstances(
-          template.id,
-          template.weeklyHoursNum,
-          SEMESTER_START_DATE,
-          SEMESTER_END_DATE
-        )
+      // Make instances
+      const instancesForTemplate = generateInstances(
+        template.id,
+        template.weeklyHoursNum,
+        SEMESTER_START_DATE
+      ).sort((a, b) => {
+        return a.weekStartDate === b.weekStartDate
+          ? a.hourIndex - b.hourIndex
+          : isBefore(new Date(b.weekStartDate), new Date(a.weekStartDate))
+          ? -1
+          : 1;
+      });
+
+      sessionInstances.push(...instancesForTemplate);
+
+      // Assign instances to entries
+      const optionsForTemplate = scheduleOptions.filter(
+        (o) => o.sessionTemplateId === template.id
       );
+
+      for (const option of optionsForTemplate) {
+        const entriesForOption = scheduleEntries.filter(
+          (e) => e.scheduleOptionId === option.id
+        );
+
+        let instIds = sessionInstances.map((i) => i.id);
+
+        for (const entry of entriesForOption) {
+          for (let i = 0; i < entry.durationInHours; i++) {
+            entry.sessionInstanceIds.push(instIds.pop() ?? " ");
+          }
+        }
+      }
+
+      // Assign instances to template
       template.sessionInstanceIds = sessionInstances.map((i) => i.id);
+
+      // Initialize weekly content for template
+      let curWeek = startOfWeek(new Date(SEMESTER_START_DATE));
+      const endWeek = startOfWeek(new Date(SEMESTER_END_DATE));
+      while (isBefore(curWeek, endWeek)) {
+        const weeklyContentId = uuidv4();
+        const weeklyContent: WeeklyContent = {
+          id: weeklyContentId,
+          sessionTemplateId: template.id,
+          week: curWeek.toISOString(),
+          resources: [],
+          aiQuizes: [],
+          summary: null,
+        };
+        weeklyContents.push(weeklyContent);
+
+        // Assign weekly content to template
+        template.weeklyContentIds.push(weeklyContentId);
+        curWeek = addWeeks(curWeek, 1);
+      }
     }
   }
 
   return {
     course,
     sessionTemplates: sessionTemplates,
-    scheduleOptions: Array.from(optionsWithDur.values()).map(
-      ({ weeklyDuration: _, ...option }) => option
-    ),
+    scheduleOptions: scheduleOptions,
     scheduleEntries,
     sessionInstances,
+    weeklyContents: weeklyContents,
   };
 }
+
+/*
+type courseInfo = {
+  "מספר מקצוע": number;
+  "שם מקצוע": string;
+  נקודות: number;
+};
+
+type ScheduleItem = {
+  קבוצה: number;
+  סוג: string;
+  יום: string;
+  שעה: string; //"HH:MM - HH:MM"
+  בניין: string;
+  חדר: number;
+  "מרצה/מתרגל": string;
+  "מס.": number;
+};
+
+export default function parseCourse(raw: {
+  general: courseInfo;
+  schedule: ScheduleItem[];
+}): {
+  course: Course;
+  sessionTemplates: SessionTemplate[];
+  scheduleOptions: ScheduleOption[];
+  scheduleEntries: ScheduleEntry[];
+  sessionInstances: SessionInstance[];
+} {
+  const scheduleItems = raw.schedule;
+
+  const sessionTemplates: SessionTemplate[] = Object.entries(
+    Object.groupBy(scheduleItems, (item) => item["סוג"])
+  ).map((raw_t) => {
+    const weeklyHoursNum = Object.values(
+      Object.groupBy(raw_t[1]!, (o) => o["קבוצה"])
+    )[0]?.reduce((sum, cur) => {
+      return sum + parseTimeRange(cur["שעה"]).duration;
+    }, 0);
+
+    return {
+      id: uuidv4(),
+      type: raw_t[0],
+      weeklyHoursNum: weeklyHoursNum,
+    };
+  });
+
+  return;
+}
+*/
